@@ -1,0 +1,17 @@
+[Unit]
+Description=Kibana 4
+
+[Service]
+Type=simple
+User=<%= scope.lookupvar('kibana4::kibana4_user') %>
+Group=<%= scope.lookupvar('kibana4::kibana4_group') %>
+RuntimeDirectory=kibana
+Environment=BABEL_CACHE_PATH=/run/kibana/babel.json
+<% if scope.lookupvar('kibana4::symlink')  %>
+ExecStart=<%= scope.lookupvar('kibana4::symlink_name') %>/bin/kibana
+<% else %>
+ExecStart=<%= scope.lookupvar('kibana4::install_dir') %>/kibana-<%= scope.lookupvar('kibana4::package_ensure') %>/bin/kibana
+<% end %>
+
+[Install]
+WantedBy=multi-user.target

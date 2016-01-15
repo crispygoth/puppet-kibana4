@@ -5,7 +5,16 @@
 class kibana4::service {
 
   # init file from template
-  if ($kibana4::manage_init_file == true) {
+  if ($kibana4::manage_service_file) {
+    file { "/lib/systemd/system/${kibana4::service_name}.service":
+      ensure  => present,
+      mode    => '0644',
+      content => template($kibana4::service_template),
+      group   => root,
+      owner   => root,
+    }
+    $require = File["/lib/systemd/system/${kibana4::service_name}.service"]
+  } elsif ($kibana4::manage_init_file == true) {
     file { "/etc/init.d/${kibana4::service_name}":
       ensure  => present,
       mode    => '0755',
